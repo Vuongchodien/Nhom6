@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Viewer</title>
+    <style>
+        /* CSS cho container chính */
+        .container {
+            display: grid;
+            grid-template-columns: 70% 30%; /* Chia trang thành hai cột 70% và 30% */
+            gap: 10px; /* Khoảng cách giữa các phần tử */
+        }
+
+        /* CSS cho bên trái - video */
+        .left-container {
+            position: relative;
+        }
+
+        .left-container iframe {
+            width: 100%;
+            height: 100vh; /* Chiều cao là 100% của viewport */
+        }
+
+        /* CSS cho bên phải - khung thông báo */
+        .right-container {
+            background-color: #f0f0f0; /* Màu nền của khung thông báo */
+            padding: 20px; /* Khoảng cách bên trong khung thông báo */
+        }
+    </style>
+</head>
+<body>
+    <h1>Camera Viewer</h1>
+
+    <!-- Container chứa cả hai phần -->
+    <div class="container">
+        <!-- Bên trái - video -->
+        <div class="left-container">
+            <iframe src="{{ camera_url }}" allowfullscreen></iframe>
+        </div>
+
+        <!-- Bên phải - khung thông báo -->
+        <div class="right-container">
+           <h2>Phát hiện chuyển động</h2>
+        </div>
+    </div>
+</body>
+</html>

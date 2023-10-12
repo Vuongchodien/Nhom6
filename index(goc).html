@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Truy cập Camera</title>
+    <style>
+        /* CSS cho video từ camera */
+        #videoContainer {
+            width: 70%;
+            float: left;
+        }
+        
+        /* CSS cho khung thông báo */
+        #motionNotification {
+            width: 30%;
+            float: right;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f5f5f5;
+        }
+        
+        /* CSS cho video chuyển động */
+        #motionVideo {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Truy cập Camera</h1>
+    
+    <!-- Hiển thị video từ camera -->
+    <div id="videoContainer">
+        <video id="video" autoplay playsinline></video>
+    </div>
+    
+    <!-- Khung thông báo -->
+    <div id="motionNotification">
+        <h2>Thông báo chuyển động</h2>
+        <video id="motionVideo" autoplay playsinline></video>
+        <p id="motionText">Time: .</p>
+    </div>
+
+    <script>
+        const videoElement = document.getElementById('video');
+        const motionVideoElement = document.getElementById('motionVideo');
+        const notificationTextElement = document.getElementById('notificationText');
+        
+        let motionHistory = []; // Lưu trữ lịch sử chuyển động
+        
+        // Hàm lấy luồng video từ camera
+        async function startCamera() {
+            try {
+                // Lấy luồng video từ camera
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                // Hiển thị luồng video lên thẻ video
+                videoElement.srcObject = stream;
+                // Cập nhật thông báo
+                notificationTextElement.textContent = 'Đã truy cập camera thành công.';
+            } catch (error) {
+                console.error('Lỗi truy cập camera:', error);
+                // Cập nhật thông báo lỗi
+                notificationTextElement.textContent = 'Lỗi truy cập camera: ' + error.message;
+            }
+        }
+        
+        // Hàm phát hiện chuyển động
+        function detectMotion() {
+            // Tại đây, bạn cần thực hiện logic để phát hiện chuyển động từ video
+            // Sau khi phát hiện chuyển động, bạn có thể thêm video và thời gian phát hiện vào lịch sử
+            const currentTime = new Date();
+            motionHistory.push({ time: currentTime, videoData: motionVideoElement.src });
+            
+            // Cập nhật thông báo
+            motionText.textContent = 'Phát hiện chuyển động!';
+        }
+        
+        // Gọi hàm startCamera khi trang web được tải
+        window.addEventListener('load', startCamera);
+        
+        // Gọi hàm detectMotion khi cần phát hiện chuyển động (ví dụ: sau khi phát hiện xác định)
+        // Trong ví dụ này, bạn cần thay thế logic phát hiện chuyển động bằng logic thực tế của bạn.
+        // detectMotion();
+    </script>
+</body>
+</html>

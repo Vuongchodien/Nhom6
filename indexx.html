@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Livestream</title>
+</head>
+<body>
+    <video id="video" autoplay></video>
+    <button id="startButton">Bật Camera</button>
+    <button id="stopButton">Tắt Camera</button>
+
+    <script>
+        // Lấy video từ camera của điện thoại
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const videoElement = document.getElementById('video');
+                videoElement.srcObject = stream;
+            } catch (error) {
+                console.error('Lỗi khi bật camera:', error);
+            }
+        }
+
+        // Tắt camera
+        function stopCamera() {
+            const videoElement = document.getElementById('video');
+            const stream = videoElement.srcObject;
+            const tracks = stream.getTracks();
+
+            tracks.forEach(track => track.stop());
+            videoElement.srcObject = null;
+        }
+
+        document.getElementById('startButton').addEventListener('click', startCamera);
+        document.getElementById('stopButton').addEventListener('click', stopCamera);
+    </script>
+</body>
+</html>
