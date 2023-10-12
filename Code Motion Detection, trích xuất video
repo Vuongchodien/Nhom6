@@ -1,0 +1,59 @@
+import cv2
+
+# Cấu hình các ngưỡng cho phát hiện chuyển động
+MIN_AREA = 500
+THRESHOLD_SENSITIVITY = 25
+
+# Đường dẫn đến video bạn đã tải lên
+video_source = "/content/drive/MyDrive/5123958121680721745.mp4"
+
+vs = cv2.VideoCapture(video_source)
+
+first_frame = None
+motion_frames = []
+
+while True:
+    frame = vs.read()[1]
+
+    if frame is None:
+        break
+
+    frame = cv2.resize(frame, (500, 500))  # Điều chỉnh kích thước video
+
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    gray = cv2.GaussianBlur(gray, (21, 21), 0)
+
+    if first_frame is None:
+        first_frame = gray
+        continue
+
+    frame_delta = cv2.absdiff(first_frame, gray)
+    thresh = cv2.threshold(frame_delta, THRESHOLD_SENSITIVITY, 255, cv2.THRESH_BINARY)[1]
+    thresh = cv2.dilate(thresh, None, iterations=2)
+
+    cnts, _ = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    motion_detected = False
+
+    for c in cnts:
+        if cv2.contourArea(c) < MIN_AREA:
+            continue
+
+        motion_detected = True
+        break
+
+    if motion_detected:
+        motion_frames.append(frame)
+
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+vs.release()
+cv2.destroyAllWindows()
+#lưu đoạn motion detection vào trong một cái file motion_detected.avi
+if motion_frames:
+    out = cv2.VideoWriter("motion_detected1.avi", cv2.VideoWriter_fourcc(*"XVID"), 20, (500, 500))
+    for frame in motion_frames:
+        out.write(frame)
+    out.release()
