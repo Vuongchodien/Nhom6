@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Viewer</title>
+    <style>
+        /* CSS cho container chính */
+        .container {
+            display: grid;
+            grid-template-columns: 70% 30%; /* Chia trang thành hai cột 70% và 30% */
+            gap: 10px; /* Khoảng cách giữa các phần tử */
+        }
+
+        /* CSS cho bên trái - video */
+        .left-container {
+            position: relative;
+        }
+
+        .left-container iframe {
+            width: 100%;
+            height: 100vh; /* Chiều cao là 100% của viewport */
+        }
+
+        /* CSS cho bên phải - khung thông báo */
+        .right-container {
+            background-color: #f0f0f0; /* Màu nền của khung thông báo */
+            padding: 20px; /* Khoảng cách bên trong khung thông báo */
+        }
+    </style>
+    <script>
+        // Hàm để cập nhật danh sách video
+        function updateVideoList() {
+            // Sử dụng XMLHttpRequest hoặc Fetch API để tải danh sách video từ server
+            fetch('/get_video_list')  // Sửa đường dẫn này để phù hợp với route Flask của bạn
+                .then(response => response.json())
+                .then(data => {
+                    const videoList = document.getElementById('video-list');
+                    videoList.innerHTML = ''; // Xóa danh sách video hiện tại
+    
+                    // Thêm các video mới vào danh sách
+                    data.forEach(video => {
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.href = video.url;
+                        a.textContent = video.name;
+                        li.appendChild(a);
+                        videoList.appendChild(li);
+                    });
+                });
+        }
+    
+        // Tự động cập nhật danh sách video mỗi x giây (ví dụ: mỗi 10 giây)
+        setInterval(updateVideoList, 10000); // Sửa thời gian tương ứng
+    
+        // Gọi hàm cập nhật lần đầu khi trang tải
+        updateVideoList();
+    </script>
+</head>
+<body>
+    <h1>Camera Viewer</h1>
+
+    <!-- Container chứa cả hai phần -->
+    <div class="container">
+        <!-- Bên trái - video -->
+        <div class="left-container">
+    		<h2>Camera</h2>
+    		
+		<img src="{{ url_for('video_feed') }}" alt="Motion Detection">
+	</div>
+
+        <!-- Bên phải - khung thông báo -->
+    	<!-- Bên phải - khung thông báo -->
+<div class="right-container">
+    <h1>Video List</h1>
+    <ul id="video-list">
+        <!-- Danh sách video sẽ được cập nhật ở đây -->
+    </ul>  
+</div>
+
+</body>
+</html>
+
+
